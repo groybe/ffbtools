@@ -20,6 +20,8 @@ One or more of the following options can be used:
   This issue is reported at [ValveSoftware/Proton/issues/2366](https://github.com/ValveSoftware/Proton/issues/2366#issuecomment-539114450) by @jdinalt
   with full debug information and the workaround that we have used here.
 
+  `--overwrite-length`: Overwrite the length of the effect with 65535 so that it is forced to stay on.
+
   `--direction-fix`: Apply a fix to the direction of the effect. Effects with only
   a vertical component are ignored so this fix sets an horizontal direction to
   all effects.

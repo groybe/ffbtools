@@ -62,6 +62,7 @@ static int enable_logger = 0;
 static int enable_update_fix = 0;
 static int enable_direction_fix = 0;
 static int enable_features_hack = 0;
+static int enable_overwrite_length = 0;
 static int enable_force_inversion = 0;
 static int ignore_set_gain = 0;
 static int enable_offset_fix = 0;
@@ -185,6 +186,11 @@ static void ffbt_init()
         enable_features_hack = 1;
     }
 
+    const char *str_overwrite_length = getenv("FFBTOOLS_OVERWRITE_LENGTH");
+    if (str_overwrite_length != NULL && strcmp(str_overwrite_length, "1") == 0) {
+        enable_overwrite_length = 1;
+    }
+
     const char *str_force_inversion = getenv("FFBTOOLS_FORCE_INVERSION");
     if (str_force_inversion != NULL && strcmp(str_force_inversion, "1") == 0) {
         enable_force_inversion = 1;
@@ -228,11 +234,11 @@ static void ffbt_init()
     if (enable_logger && ftell(log_file) == 0) {
         report("# DEVICE_NAME=%s, UPDATE_FIX=%d, "
                 "DIRECTION_FIX=%d, FEATURES_HACK=%d, "
-                "FORCE_INVERSION=%d, IGNORE_SET_GAIN=%d, OFFSET_FIX=%d, "
+                "OVERWRITE_LENGTH=%d, FORCE_INVERSION=%d, IGNORE_SET_GAIN=%d, OFFSET_FIX=%d, "
                 "THROTTLING=%s",
                 getenv("FFBTOOLS_DEVICE_NAME"), enable_update_fix,
                 enable_direction_fix, enable_features_hack,
-                enable_force_inversion, ignore_set_gain, enable_offset_fix,
+                enable_overwrite_length, enable_force_inversion, ignore_set_gain, enable_offset_fix,
                 str_throttling == NULL ? "0" : str_throttling);
     }
 }
@@ -378,7 +384,7 @@ int ioctl(int fd, unsigned long request, char *argp)
                         effect->u.condition[0].center);
             }
 
-            int modified = enable_direction_fix | enable_force_inversion;
+            int modified = enable_direction_fix | enable_overwrite_length | enable_force_inversion;
 
             report("%s> UPLOAD id:%d dir:%d length:%d delay:%d type:%s %s",
                     modified ? "#" : "", effect->id,
@@ -390,6 +396,14 @@ int ioctl(int fd, unsigned long request, char *argp)
                 report("> UPLOAD id:%d dir:%d type:%s length:%d delay:%d %s "
                         "# direction fix", effect->id, effect->direction, type,
                         effect->replay.length, effect->replay.delay,
+                        effect_params);
+            }
+            
+            if (enable_overwrite_length) {
+                effect->replay.length = 0xFFFF;
+                report("> UPLOAD id:%d dir:%d type:%s length:%d delay:%d %s "
+                        "# length overwritten to 65535", effect->id, effect->direction,
+                        type, effect->replay.length, effect->replay.delay,
                         effect_params);
             }
 
