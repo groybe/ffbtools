@@ -1,3 +1,11 @@
+Quick fix for OpenFFBoard.
+Possibly only works for constant force. Changes direction based on positive or negative value of constant force.
+Wrongly sets duration of infinite effects as 0xFFFF although it does work. See https://github.com/berarma/ffbtools/issues/26#issuecomment-1070876603
+
+Run with
+
+`ffbtools-master/bin/ffbwrap --direction-fix --overwrite-length /dev/input/by-id/usb-Open_FFBoard_FFBoard_*event-joystick -- wine`
+__________________________
 # FFBTools
 
 This is a set of evolving tools and documentation to help understand and debug
