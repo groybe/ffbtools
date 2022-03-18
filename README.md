@@ -4,7 +4,7 @@ Wrongly sets duration of infinite effects as 0xFFFF although it does work. See h
 
 Run with
 
-`ffbtools-master/bin/ffbwrap --direction-fix --overwrite-length /dev/input/by-id/usb-Open_FFBoard_FFBoard_*event-joystick -- wine`
+`ffbtools-OpenFFBoard_fix/bin/ffbwrap --direction-fix --overwrite-length /dev/input/by-id/usb-Open_FFBoard_FFBoard_*event-joystick -- wine`
 __________________________
 # FFBTools
 
